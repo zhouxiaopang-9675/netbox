@@ -216,6 +216,6 @@ class L2VPNTerminationFilter(NetBoxModelFilter):
     assigned_object_type: Annotated['ContentTypeFilter', strawberry.lazy('core.graphql.filters')] | None = (
         strawberry_django.filter_field()
     )
-    assigned_object_id: Annotated['IntegerLookup', strawberry.lazy('netbox.graphql.filter_lookups')] | None = (
+    assigned_object_id: Annotated['BigIntegerLookup', strawberry.lazy('netbox.graphql.filter_lookups')] | None = (
         strawberry_django.filter_field()
     )

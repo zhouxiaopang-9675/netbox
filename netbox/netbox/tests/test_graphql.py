@@ -36,7 +36,7 @@ from dcim.models import (
 )
 from extras.choices import CustomFieldTypeChoices
 from extras.models import CustomField, ExportTemplate, JournalEntry, TableConfig, Tag
-from ipam.models import RIR, VLAN, Aggregate, IPAddress, Prefix
+from ipam.models import ASN, RIR, VLAN, Aggregate, IPAddress, Prefix
 from netbox.graphql.pagination import apply_distinct_window_pagination
 from netbox.graphql.scalars import BigInt, BigIntScalar
 from netbox.graphql.schema import Query, get_schema_extensions, schema
@@ -492,13 +492,7 @@ class GraphQLAPITestCase(APITestCase):
         self.assertEqual(data['data']['journal_entry_list'], [{'assigned_object_id': object_id}])
 
         # Filter on a generic object ID
-        query = f"""
-        {{
-            l2vpn_termination_list(filters: {{assigned_object_id: {{filter_lookup: {{exact: {object_id}}}}}}}) {{
-                id
-            }}
-        }}
-        """
+        query = f'{{ l2vpn_termination_list(filters: {{assigned_object_id: "{object_id}"}}) {{ id }} }}'
         response = self.client.post(url, data={'query': query}, format='json', **self.header)
         self.assertHttpStatus(response, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -506,12 +500,55 @@ class GraphQLAPITestCase(APITestCase):
         self.assertEqual(len(data['data']['l2vpn_termination_list']), 1)
 
         # Filter on a related object ID
-        query = f'{{ export_template_list(filters: {{data_source_id: {{exact: {object_id}}}}}) {{ id }} }}'
+        query = f'{{ export_template_list(filters: {{data_source_id: "{object_id}"}}) {{ id }} }}'
         response = self.client.post(url, data={'query': query}, format='json', **self.header)
         self.assertHttpStatus(response, status.HTTP_200_OK)
         data = json.loads(response.content)
         self.assertNotIn('errors', data)
         self.assertEqual(data['data']['export_template_list'], [{'id': str(export_template.pk)}])
+
+    def test_graphql_bigint_filter_validation(self):
+        """
+        BigInt filter values must be validated as 64-bit integers before the query is executed.
+        """
+        self.add_permissions('ipam.view_asn')
+        url = reverse('graphql')
+        rir = RIR.objects.create(name='RIR 1', slug='rir-1')
+        asn = ASN.objects.create(asn=4_200_000_000, rir=rir)
+
+        # Integers and numeric strings beyond the 32-bit range are accepted
+        for value in ('4200000000', '"4200000000"'):
+            query = f'{{ asn_list(filters: {{asn: {{filter_lookup: {{exact: {value}}}}}}}) {{ id }} }}'
+            response = self.client.post(url, data={'query': query}, format='json', **self.header)
+            self.assertHttpStatus(response, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            self.assertNotIn('errors', data)
+            self.assertEqual(data['data']['asn_list'], [{'id': str(asn.pk)}])
+
+        # Non-integer and out-of-range values are rejected
+        for value in ('1.5', '"abc"', 'true', str(2**63)):
+            query = f'{{ asn_list(filters: {{asn: {{filter_lookup: {{exact: {value}}}}}}}) {{ id }} }}'
+            response = self.client.post(url, data={'query': query}, format='json', **self.header)
+            data = json.loads(response.content)
+            self.assertIn('errors', data, msg=f'{value} was not rejected')
+            self.assertIn('BigInt cannot represent', data['errors'][0]['message'])
+
+        # Values passed as variables are validated the same way
+        query = 'query ($asn: BigInt) { asn_list(filters: {asn: {filter_lookup: {exact: $asn}}}) { id } }'
+        for value in (4_200_000_000, '4200000000'):
+            response = self.client.post(
+                url, data={'query': query, 'variables': {'asn': value}}, format='json', **self.header
+            )
+            self.assertHttpStatus(response, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            self.assertNotIn('errors', data)
+            self.assertEqual(data['data']['asn_list'], [{'id': str(asn.pk)}])
+        response = self.client.post(
+            url, data={'query': query, 'variables': {'asn': 'abc'}}, format='json', **self.header
+        )
+        data = json.loads(response.content)
+        self.assertIn('errors', data)
+        self.assertIn('BigInt cannot represent', data['errors'][0]['message'])
 
     def test_graphql_array_length_lookup(self):
         """
@@ -918,11 +955,7 @@ class GraphQLAPITestCase(APITestCase):
         class PluginQuery:
             platforms: list[PluginPlatformType] = strawberry_django.field()
 
-        plugin_schema = strawberry.Schema(
-            query=PluginQuery,
-            config=StrawberryConfig(scalar_map={BigInt: BigIntScalar}),
-            extensions=[DjangoOptimizerExtension],
-        )
+        plugin_schema = strawberry.Schema(query=PluginQuery, extensions=[DjangoOptimizerExtension])
         self.user.is_superuser = True
         result = plugin_schema.execute_sync(
             '{ platforms { name display } }',

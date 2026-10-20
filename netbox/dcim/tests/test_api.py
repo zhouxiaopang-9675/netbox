@@ -5871,6 +5871,66 @@ class CableTestCase(APIViewTestCases.APIViewTestCase):
                 self.assertEqual(kept.cable, cable)
                 self.assertFalse(kept._path.is_complete)
 
+    def test_update_without_terminations_preserves_them(self):
+        """PATCHing a scalar field leaves both cable ends unchanged."""
+        cable = Cable.objects.get(label='Cable 1')
+        a_terminations, b_terminations = cable.a_terminations, cable.b_terminations
+
+        self.add_permissions('dcim.change_cable')
+        response = self.client.patch(
+            self._get_detail_url(cable), {'label': 'Cable 1 renamed'}, format='json', **self.header
+        )
+        self.assertHttpStatus(response, status.HTTP_200_OK)
+
+        cable = Cable.objects.get(pk=cable.pk)
+        self.assertEqual(cable.a_terminations, a_terminations)
+        self.assertEqual(cable.b_terminations, b_terminations)
+
+    def test_update_terminations_adds_to_a_multi_termination_end(self):
+        """PATCHing the complete termination list keeps the existing rows and adds the new termination."""
+        device1, device2 = Device.objects.order_by('name')
+        interfaces = [Interface.objects.get(device=device2, name=name) for name in ('eth7', 'eth8', 'eth9')]
+        cable = Cable(
+            a_terminations=[Interface.objects.get(device=device1, name='eth7')],
+            b_terminations=interfaces[:2],
+            label='Cable 7'
+        )
+        cable.save()
+        rows = CableTermination.objects.filter(cable=cable, cable_end=CableEndChoices.SIDE_B)
+        existing_rows = set(rows.values_list('pk', flat=True))
+
+        self.add_permissions('dcim.change_cable')
+        data = {
+            'b_terminations': [
+                {'object_type': 'dcim.interface', 'object_id': interface.pk} for interface in interfaces
+            ],
+        }
+        response = self.client.patch(self._get_detail_url(cable), data, format='json', **self.header)
+        self.assertHttpStatus(response, status.HTTP_200_OK)
+
+        self.assertCountEqual(Cable.objects.get(pk=cable.pk).b_terminations, interfaces)
+        self.assertTrue(existing_rows.issubset(rows.values_list('pk', flat=True)))
+
+    def test_update_terminations_replaces_a_multi_termination_end(self):
+        """PATCHing a shorter termination list removes the omitted termination."""
+        device1, device2 = Device.objects.order_by('name')
+        interfaces = [Interface.objects.get(device=device2, name=name) for name in ('eth7', 'eth8')]
+        cable = Cable(
+            a_terminations=[Interface.objects.get(device=device1, name='eth7')],
+            b_terminations=interfaces,
+            label='Cable 7'
+        )
+        cable.save()
+
+        self.add_permissions('dcim.change_cable')
+        data = {
+            'b_terminations': [{'object_type': 'dcim.interface', 'object_id': interfaces[0].pk}],
+        }
+        response = self.client.patch(self._get_detail_url(cable), data, format='json', **self.header)
+        self.assertHttpStatus(response, status.HTTP_200_OK)
+
+        self.assertEqual(Cable.objects.get(pk=cable.pk).b_terminations, [interfaces[0]])
+
     def test_graphql_cable_termination_cached_filters(self):
         """
         Validate filtering cables by cached CableTermination relations via GraphQL:

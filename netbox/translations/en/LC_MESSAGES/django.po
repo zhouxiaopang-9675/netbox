@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 05:01+0000\n"
+"POT-Creation-Date: 2026-10-22 05:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -363,9 +363,9 @@ msgstr ""
 #: netbox/extras/filtersets.py:519 netbox/extras/filtersets.py:578
 #: netbox/extras/filtersets.py:639 netbox/extras/filtersets.py:678
 #: netbox/extras/filtersets.py:711 netbox/extras/filtersets.py:885
-#: netbox/ipam/forms/model_forms.py:559 netbox/netbox/filtersets.py:341
+#: netbox/ipam/forms/model_forms.py:559 netbox/netbox/filtersets.py:346
 #: netbox/netbox/forms/filtersets.py:32 netbox/netbox/forms/search.py:20
-#: netbox/templates/htmx/object_selector.html:28
+#: netbox/templates/htmx/object_selector.html:33
 #: netbox/templates/inc/filter_list.html:43
 #: netbox/templates/ipam/ipaddress_assign.html:29
 #: netbox/templates/search.html:7 netbox/templates/search.html:26
@@ -386,7 +386,7 @@ msgstr ""
 #: netbox/circuits/forms/model_forms.py:181
 #: netbox/circuits/forms/model_forms.py:208
 #: netbox/circuits/tables/circuits.py:104
-#: netbox/circuits/tables/circuits.py:201 netbox/dcim/forms/connections.py:83
+#: netbox/circuits/tables/circuits.py:201 netbox/dcim/forms/connections.py:86
 #: netbox/templates/dcim/inc/cable_termination.html:62
 #: netbox/templates/dcim/trace/circuit.html:4
 msgid "Circuit"
@@ -1770,7 +1770,7 @@ msgstr ""
 msgid "Assignments"
 msgstr ""
 
-#: netbox/circuits/tables/circuits.py:113 netbox/dcim/forms/connections.py:91
+#: netbox/circuits/tables/circuits.py:113 netbox/dcim/forms/connections.py:94
 msgid "Side"
 msgstr ""
 
@@ -1820,7 +1820,7 @@ msgstr ""
 #: netbox/dcim/forms/bulk_import.py:1299 netbox/dcim/forms/bulk_import.py:1405
 #: netbox/dcim/forms/bulk_import.py:1424 netbox/dcim/forms/bulk_import.py:1442
 #: netbox/dcim/forms/bulk_import.py:1496 netbox/dcim/forms/bulk_import.py:1618
-#: netbox/dcim/forms/bulk_import.py:2411 netbox/dcim/forms/connections.py:34
+#: netbox/dcim/forms/bulk_import.py:2411 netbox/dcim/forms/connections.py:35
 #: netbox/dcim/forms/filtersets.py:170 netbox/dcim/forms/filtersets.py:1151
 #: netbox/dcim/forms/filtersets.py:1188 netbox/dcim/forms/filtersets.py:1355
 #: netbox/dcim/forms/filtersets.py:1715 netbox/dcim/forms/filtersets.py:1738
@@ -6324,14 +6324,14 @@ msgid ""
 "parent device/VM, or they must be global"
 msgstr ""
 
-#: netbox/dcim/forms/connections.py:59 netbox/dcim/forms/model_forms.py:1107
+#: netbox/dcim/forms/connections.py:61 netbox/dcim/forms/model_forms.py:1107
 #: netbox/dcim/tables/power.py:63
 #: netbox/templates/dcim/inc/cable_termination.html:40
 #: netbox/templates/dcim/trace/powerpanel.html:4
 msgid "Power Panel"
 msgstr ""
 
-#: netbox/dcim/forms/connections.py:68 netbox/dcim/forms/model_forms.py:1154
+#: netbox/dcim/forms/connections.py:70 netbox/dcim/forms/model_forms.py:1154
 #: netbox/dcim/views.py:3635
 msgid "Power Feed"
 msgstr ""
@@ -18947,113 +18947,114 @@ msgstr ""
 msgid "Unrecognized header: {name}"
 msgstr ""
 
+#: netbox/utilities/forms/mixins.py:30 netbox/utilities/forms/mixins.py:35
+#: netbox/utilities/forms/mixins.py:47 netbox/utilities/forms/mixins.py:57
+#: netbox/utilities/forms/mixins.py:67 netbox/utilities/forms/mixins.py:77
+#: netbox/utilities/forms/mixins.py:83 netbox/utilities/forms/mixins.py:96
+#: netbox/utilities/forms/mixins.py:102
+msgid "is"
+msgstr ""
+
 #: netbox/utilities/forms/mixins.py:31 netbox/utilities/forms/mixins.py:43
 #: netbox/utilities/forms/mixins.py:53 netbox/utilities/forms/mixins.py:63
 #: netbox/utilities/forms/mixins.py:73 netbox/utilities/forms/mixins.py:79
-#: netbox/utilities/forms/mixins.py:92 netbox/utilities/forms/mixins.py:98
-msgid "is"
+#: netbox/utilities/forms/mixins.py:85 netbox/utilities/forms/mixins.py:92
+#: netbox/utilities/forms/mixins.py:98 netbox/utilities/forms/mixins.py:104
+msgid "is empty"
 msgstr ""
 
 #: netbox/utilities/forms/mixins.py:32 netbox/utilities/forms/mixins.py:44
 #: netbox/utilities/forms/mixins.py:54 netbox/utilities/forms/mixins.py:64
 #: netbox/utilities/forms/mixins.py:74 netbox/utilities/forms/mixins.py:80
-#: netbox/utilities/forms/mixins.py:93 netbox/utilities/forms/mixins.py:99
-msgid "is not"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:33
-msgid "contains"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:34
-msgid "starts with"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:35
-msgid "ends with"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:36
-msgid "equals (case-insensitive)"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:37
-msgid "matches pattern"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:38
-msgid "matches pattern (case-insensitive)"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:39 netbox/utilities/forms/mixins.py:49
-#: netbox/utilities/forms/mixins.py:59 netbox/utilities/forms/mixins.py:69
-#: netbox/utilities/forms/mixins.py:75 netbox/utilities/forms/mixins.py:81
-#: netbox/utilities/forms/mixins.py:88 netbox/utilities/forms/mixins.py:94
-#: netbox/utilities/forms/mixins.py:100
-msgid "is empty"
-msgstr ""
-
-#: netbox/utilities/forms/mixins.py:40 netbox/utilities/forms/mixins.py:50
-#: netbox/utilities/forms/mixins.py:60 netbox/utilities/forms/mixins.py:70
-#: netbox/utilities/forms/mixins.py:76 netbox/utilities/forms/mixins.py:82
-#: netbox/utilities/forms/mixins.py:89 netbox/utilities/forms/mixins.py:95
-#: netbox/utilities/forms/mixins.py:101
+#: netbox/utilities/forms/mixins.py:86 netbox/utilities/forms/mixins.py:93
+#: netbox/utilities/forms/mixins.py:99 netbox/utilities/forms/mixins.py:105
 msgid "is not empty"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:45 netbox/utilities/forms/mixins.py:55
+#: netbox/utilities/forms/mixins.py:36 netbox/utilities/forms/mixins.py:48
+#: netbox/utilities/forms/mixins.py:58 netbox/utilities/forms/mixins.py:68
+#: netbox/utilities/forms/mixins.py:78 netbox/utilities/forms/mixins.py:84
+#: netbox/utilities/forms/mixins.py:97 netbox/utilities/forms/mixins.py:103
+msgid "is not"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:37
+msgid "contains"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:38
+msgid "starts with"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:39
+msgid "ends with"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:40
+msgid "equals (case-insensitive)"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:41
+msgid "matches pattern"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:42
+msgid "matches pattern (case-insensitive)"
+msgstr ""
+
+#: netbox/utilities/forms/mixins.py:49 netbox/utilities/forms/mixins.py:59
 msgid "greater than"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:46 netbox/utilities/forms/mixins.py:56
+#: netbox/utilities/forms/mixins.py:50 netbox/utilities/forms/mixins.py:60
 msgid "at least"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:47 netbox/utilities/forms/mixins.py:57
+#: netbox/utilities/forms/mixins.py:51 netbox/utilities/forms/mixins.py:61
 msgid "less than"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:48 netbox/utilities/forms/mixins.py:58
+#: netbox/utilities/forms/mixins.py:52 netbox/utilities/forms/mixins.py:62
 msgid "at most"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:65
+#: netbox/utilities/forms/mixins.py:69
 msgid "after"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:66
+#: netbox/utilities/forms/mixins.py:70
 msgid "on or after"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:67
+#: netbox/utilities/forms/mixins.py:71
 msgid "before"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:68
+#: netbox/utilities/forms/mixins.py:72
 msgid "on or before"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:85
+#: netbox/utilities/forms/mixins.py:89
 msgid "has these tags"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:86
+#: netbox/utilities/forms/mixins.py:90
 msgid "has any of these tags"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:87
+#: netbox/utilities/forms/mixins.py:91
 msgid "does not have these tags"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:108
+#: netbox/utilities/forms/mixins.py:112
 msgid "Background job"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:109
+#: netbox/utilities/forms/mixins.py:113
 msgid "Execute this task via a background job"
 msgstr ""
 
-#: netbox/utilities/forms/mixins.py:156
+#: netbox/utilities/forms/mixins.py:160
 msgid ""
 "This object has been modified since the form was rendered. Please consult "
 "the object's change log for details."
@@ -19113,12 +19114,12 @@ msgstr ""
 msgid "Required column header \"{header}\" not found."
 msgstr ""
 
-#: netbox/utilities/forms/widgets/apiselect.py:132
+#: netbox/utilities/forms/widgets/apiselect.py:148
 #, python-brace-format
 msgid "Missing required value for dynamic query param: '{dynamic_params}'"
 msgstr ""
 
-#: netbox/utilities/forms/widgets/apiselect.py:149
+#: netbox/utilities/forms/widgets/apiselect.py:165
 #, python-brace-format
 msgid "Missing required value for static query param: '{static_params}'"
 msgstr ""
